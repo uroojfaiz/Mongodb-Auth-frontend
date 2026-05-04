@@ -1,11 +1,12 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import { motion } from 'framer-motion'; // Animation ke liye
+import { motion } from 'framer-motion';
 
 export default function Register() {
   const { register } = useAuth();
   const navigate = useNavigate();
+
   const [form, setForm] = useState({ name: '', email: '', password: '' });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
@@ -17,6 +18,7 @@ export default function Register() {
     e.preventDefault();
     setError('');
     setLoading(true);
+
     try {
       await register(form);
       navigate('/dashboard');
@@ -27,98 +29,193 @@ export default function Register() {
     }
   };
 
+  // ✅ ALL CSS IN ONE VARIABLE (NO TAILWIND)
+  const styles = `
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: linear-gradient(to bottom right, #f8fafc, #e2e8f0);
+    }
+
+    .container {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+
+    .card {
+      width: 100%;
+      max-width: 420px;
+      background: white;
+      border-radius: 16px;
+      padding: 30px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+      border: 1px solid #e5e7eb;
+    }
+
+    .title {
+      text-align: center;
+      font-size: 28px;
+      font-weight: bold;
+      color: #1f2937;
+    }
+
+    .subtitle {
+      text-align: center;
+      font-size: 14px;
+      color: #6b7280;
+      margin-top: 5px;
+    }
+
+    .error {
+      background: #fee2e2;
+      border-left: 4px solid #ef4444;
+      color: #b91c1c;
+      padding: 10px;
+      margin: 15px 0;
+      border-radius: 6px;
+      font-size: 13px;
+    }
+
+    .field {
+      margin-bottom: 15px;
+    }
+
+    .label {
+      font-size: 12px;
+      font-weight: bold;
+      color: #4b5563;
+      text-transform: uppercase;
+      margin-bottom: 5px;
+      display: block;
+    }
+
+    .input {
+      width: 100%;
+      padding: 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+      background: #f9fafb;
+      outline: none;
+      transition: 0.2s;
+    }
+
+    .input:focus {
+      border-color: #6366f1;
+      background: white;
+      box-shadow: 0 0 0 4px rgba(99,102,241,0.1);
+    }
+
+    .button {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 10px;
+      background: #4f46e5;
+      color: white;
+      font-weight: bold;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+
+    .button:hover {
+      background: #4338ca;
+    }
+
+    .button:disabled {
+      background: #a5b4fc;
+      cursor: not-allowed;
+    }
+
+    .footer {
+      text-align: center;
+      margin-top: 20px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+
+    .link {
+      color: #4f46e5;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    .link:hover {
+      text-decoration: underline;
+    }
+  `;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-200 px-4">
-      {/* Animated Card using Framer Motion */}
-      <motion.div 
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-md bg-white rounded-2xl shadow-xl shadow-slate-300/50 p-8 border border-slate-100"
-      >
-        <div className="text-center mb-8">
-          <h2 className="text-3xl font-bold text-slate-800 tracking-tight">Create account</h2>
-          <p className="text-slate-500 mt-2 text-sm">Join our community and start blogging</p>
-        </div>
+    <>
+      {/* Inject CSS */}
+      <style>{styles}</style>
 
-        {error && (
-          <motion.div 
-            initial={{ scale: 0.95 }}
-            animate={{ scale: 1 }}
-            className="bg-red-50 border-l-4 border-red-500 text-red-700 p-3 rounded mb-6 text-sm"
-          >
-            {error}
-          </motion.div>
-        )}
+      <div className="container">
+        <motion.div
+          className="card"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+        >
+          <h2 className="title">Create Account</h2>
+          <p className="subtitle">Join our community and start blogging</p>
 
-        <form onSubmit={handleSubmit} className="space-y-5">
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider ml-1">Full Name</label>
-            <input
-              type="text"
-              name="name"
-              placeholder="Maria Hussain"
-              value={form.name}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all duration-200 bg-slate-50/50 focus:bg-white"
-            />
-          </div>
+          {error && <div className="error">{error}</div>}
 
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider ml-1">Email Address</label>
-            <input
-              type="email"
-              name="email"
-              placeholder="you@example.com"
-              value={form.email}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all duration-200 bg-slate-50/50 focus:bg-white"
-            />
-          </div>
+          <form onSubmit={handleSubmit}>
+            <div className="field">
+              <label className="label">Full Name</label>
+              <input
+                className="input"
+                type="text"
+                name="name"
+                value={form.name}
+                onChange={handleChange}
+                placeholder="Maria Hussain"
+                required
+              />
+            </div>
 
-          <div className="space-y-1">
-            <label className="text-xs font-semibold text-slate-600 uppercase tracking-wider ml-1">Password</label>
-            <input
-              type="password"
-              name="password"
-              placeholder="••••••••"
-              value={form.password}
-              onChange={handleChange}
-              required
-              className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-indigo-500 focus:ring-4 focus:ring-indigo-500/10 outline-none transition-all duration-200 bg-slate-50/50 focus:bg-white"
-            />
-          </div>
+            <div className="field">
+              <label className="label">Email</label>
+              <input
+                className="input"
+                type="email"
+                name="email"
+                value={form.email}
+                onChange={handleChange}
+                placeholder="you@example.com"
+                required
+              />
+            </div>
 
-          <motion.button
-            whileHover={{ scale: 1.01 }}
-            whileTap={{ scale: 0.98 }}
-            type="submit"
-            disabled={loading}
-            className={`w-full py-3.5 rounded-xl font-bold text-white shadow-lg shadow-indigo-200 transition-all ${
-              loading ? 'bg-indigo-400 cursor-not-allowed' : 'bg-indigo-600 hover:bg-indigo-700'
-            }`}
-          >
-            {loading ? (
-              <span className="flex items-center justify-center gap-2">
-                <svg className="animate-spin h-5 w-5 text-white" viewBox="0 0 24 24">
-                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" fill="none" />
-                  <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z" />
-                </svg>
-                Creating account...
-              </span>
-            ) : 'Register'}
-          </motion.button>
-        </form>
+            <div className="field">
+              <label className="label">Password</label>
+              <input
+                className="input"
+                type="password"
+                name="password"
+                value={form.password}
+                onChange={handleChange}
+                placeholder="••••••••"
+                required
+              />
+            </div>
 
-        <p className="mt-8 text-center text-sm text-slate-500">
-          Already have an account?{' '}
-          <Link to="/login" className="text-indigo-600 font-bold hover:underline">
-            Login here
-          </Link>
-        </p>
-      </motion.div>
-    </div>
+            <button className="button" type="submit" disabled={loading}>
+              {loading ? 'Creating account...' : 'Register'}
+            </button>
+          </form>
+
+          <p className="footer">
+            Already have an account?{' '}
+            <Link className="link" to="/login">
+              Login here
+            </Link>
+          </p>
+        </motion.div>
+      </div>
+    </>
   );
 }
